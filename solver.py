@@ -1,3 +1,4 @@
+from re import L
 import pygame  # used for the display
 
 pygame.init()
@@ -55,15 +56,27 @@ def solve():
     # 1. There can't be two same numbers in each 3x3 square
     # 2. There can't be two same numbers in a row
     # 3. There can't be two same numbers in a collumn
+    empty = findEmpty()
+    if not empty:
+        return True
+    x, y = empty
+    for guess in range(1, 10):
+        if validate(x, y, guess):
+            grid[y][x] = guess
+            if solve():
+                return True
 
-    pass
+        grid[y][x] = 0
+    return False
 
-def findEmpty(): #needed for the backtracking algorithm
+
+def findEmpty():  # needed for the backtracking algorithm
     for x in range(9):
         for y in range(9):
             if grid[y][x] == 0:
                 return (x, y)
     return False
+
 
 def validate(x, y, val):
     # check if the given inputs are suitable
