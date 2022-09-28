@@ -13,6 +13,8 @@ grid = [[0 for _ in range(9)] for x in range(9)]
 solvedCells = set()
 
 
+gDelay = [0.2]
+
 def resetgrid(grid):
     grid[0] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     grid[1] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -66,6 +68,7 @@ def populateGrid():  # this isn't a pure function too
 
 
 def solve():
+    delay = gDelay[0]
     # prevX and prevY are just to make visualization nicer
     #
     # rules of sudoku:
@@ -85,7 +88,19 @@ def solve():
         cellVal = font1.render(str(guess), 1, (0, 0, 0))
         screen.blit(cellVal, ((y+0.5)*step, (x+0.5)*step))
         pygame.display.update()
-        sleep(0.1)
+        sleep(delay)
+        for event in pygame.event.get():
+            # Quit the game window
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    gDelay[0] -= 0.1
+                    if gDelay[0] < 0:
+                        gDelay[0] = 0
+                if event.key == pygame.K_RIGHT:
+                    gDelay[0] += 0.1
         if validate(x, y, guess):
             solvedCells.add((x, y))
             grid[y][x] = guess
@@ -159,6 +174,8 @@ while run:
             if event.key == pygame.K_r:
                 resetgrid(grid)
             if event.key == pygame.K_s:
+                gDelay[0] = 0.2
+                solvedCells = set()
                 solve()
             if selectedCords != (-1, -1):
                 if event.key == pygame.K_0:
@@ -185,3 +202,4 @@ while run:
     drawGrid()
     populateGrid()
     pygame.display.update()
+pygame.quit()
