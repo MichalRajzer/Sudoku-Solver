@@ -14,7 +14,7 @@ step = 1000/9
 font1 = pygame.font.SysFont("Ariel", 60)
 
 
-def createChallengeGrid(): #create a predifined sudoku table
+def createChallengeGrid():  # create a predifined sudoku table
     grid[0] = [9, 8, 5, 4, 0, 1, 0, 0, 0]
     grid[1] = [0, 0, 0, 0, 3, 0, 0, 0, 0]
     grid[2] = [1, 0, 6, 0, 0, 0, 0, 0, 0]
@@ -49,12 +49,15 @@ def populateGrid():  # this isn't a pure function too
             print(cell, end=' ')
         print('')
 
+
 def solve():
     # rules of sudoku:
     # 1. There can't be two same numbers in each 3x3 square
     # 2. There can't be two same numbers in a row
     # 3. There can't be two same numbers in a collumn
+
     pass
+
 
 def validate(x, y, val):
     # check if the given inputs are suitable
@@ -67,13 +70,14 @@ def validate(x, y, val):
             return False
     for i in range(9):
         pass
-    qx = x//3*3 # qx and qy are the coords of the top left corner of the small square containing x and y
+    qx = x//3*3  # qx and qy are the coords of the top left corner of the small square containing x and y
     qy = y//3*3
     for i in range(3):
         for j in range(3):
-            if val == grid[j][i]:
+            if val == grid[qy + j][qx + i]:
                 return False
     return True
+
 
 createChallengeGrid()
 drawGrid()
