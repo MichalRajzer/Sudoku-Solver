@@ -6,11 +6,25 @@ screen = pygame.display.set_mode((1000, 1000))  # create 1000px x 1000px window
 
 pygame.display.set_caption("Sudoku solver")
 
-grid = [[0 for _ in range(9)] for x in range(9)]  # sudoku grid is 9x9
+# sudoku grid is 9x9 0 can be used as placeholder since it isn't used in game
+grid = [[0 for _ in range(9)] for x in range(9)]
 
 step = 1000/9
 
 font1 = pygame.font.SysFont("Ariel", 60)
+
+
+def createChallengeGrid(): #create a predifined sudoku table
+    grid[0] = [9, 8, 5, 4, 0, 1, 0, 0, 0]
+    grid[1] = [0, 0, 0, 0, 3, 0, 0, 0, 0]
+    grid[2] = [1, 0, 6, 0, 0, 0, 0, 0, 0]
+    grid[3] = [0, 0, 0, 5, 0, 0, 0, 0, 0]
+    grid[4] = [4, 0, 2, 0, 0, 9, 0, 0, 3]
+    grid[5] = [0, 9, 0, 0, 6, 3, 4, 0, 0]
+    grid[6] = [0, 6, 0, 0, 1, 0, 0, 0, 0]
+    grid[7] = [0, 0, 0, 3, 0, 6, 0, 0, 5]
+    grid[8] = [2, 0, 0, 0, 8, 0, 0, 0, 1]
+
 
 def drawGrid():  # this isn't a pure function but oh well
     screen.fill((255, 255, 255))
@@ -25,14 +39,18 @@ def drawGrid():  # this isn't a pure function but oh well
         else:
             pygame.draw.line(screen, (0, 0, 0), (0, i*step), (1000, i*step), 1)
 
-def populateGrid():
+
+def populateGrid():  # this isn't a pure function too
     for i, row in enumerate(grid):
         for j, cell in enumerate(row):
-            cellVal = font1.render(str(cell), 1, (0, 0, 0))
-            screen.blit(cellVal, ((i+0.5)*step, (j+0.5)*step))
+            if cell != 0:
+                cellVal = font1.render(str(cell), 1, (0, 0, 0))
+                screen.blit(cellVal, ((i+0.5)*step, (j+0.5)*step))
             print(cell, end=' ')
         print('')
 
+
+createChallengeGrid()
 drawGrid()
 populateGrid()
 pygame.display.update()
