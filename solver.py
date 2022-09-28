@@ -7,15 +7,28 @@ screen = pygame.display.set_mode((1000, 1000))  # create 1000px x 1000px window
 
 pygame.display.set_caption("Sudoku solver")
 
-# sudoku grid is 9x9 0 can be used as placeholder since it isn't used in game
 grid = [[0 for _ in range(9)] for x in range(9)]
+# sudoku grid is 9x9 0 can be used as placeholder since it isn't used in game
+
+
+def resetgrid(grid):
+    grid[0] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    grid[1] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    grid[2] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    grid[3] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    grid[4] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    grid[5] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    grid[6] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    grid[7] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    grid[8] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 
 step = 1000/9
 
 font1 = pygame.font.SysFont("Ariel", 60)
 
 
-def createChallengeGrid():  # create a predifined sudoku table
+def createChallengeGrid(grid):  # create a predifined sudoku table
     grid[0] = [9, 8, 5, 4, 0, 1, 0, 0, 0]
     grid[1] = [0, 0, 0, 0, 3, 0, 0, 0, 0]
     grid[2] = [1, 0, 6, 0, 0, 0, 0, 0, 0]
@@ -98,10 +111,24 @@ def validate(x, y, val):
     return True
 
 
-createChallengeGrid()
-drawGrid()
-populateGrid()
-pygame.display.update()
+resetgrid(grid)
+run = True
+normalRun = True # False means its in autosolve mode
 
-while True:
-    pass
+
+while run:
+    for event in pygame.event.get():
+        # Quit the game window
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_f:
+                createChallengeGrid(grid)
+            if event.key == pygame.K_r:
+                resetgrid(grid)
+    if normalRun:
+        drawGrid()
+        populateGrid()
+        pygame.display.update()
+    else:
+        pass
