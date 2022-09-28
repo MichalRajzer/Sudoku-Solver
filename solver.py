@@ -1,5 +1,5 @@
-from re import L
 import pygame  # used for the display
+from time import sleep
 
 pygame.init()
 screen = pygame.display.set_mode((1000, 1000))  # create 1000px x 1000px window
@@ -64,7 +64,9 @@ def populateGrid():  # this isn't a pure function too
         print('')
 
 
-def solve():
+def solve(prevX, prevY):
+    # prevX and prevY are just to make visualization nicer
+    #
     # rules of sudoku:
     # 1. There can't be two same numbers in each 3x3 square
     # 2. There can't be two same numbers in a row
@@ -74,9 +76,19 @@ def solve():
         return True
     x, y = empty
     for guess in range(1, 10):
+        drawGrid()
+        pygame.draw.rect(screen, (0, 255, 0), (prevY*step, prevX *
+                                               step, step, step))
+        pygame.draw.rect(screen, (0, 0, 255), (y*step, x *
+                                               step, step, step))
+        populateGrid()
+        cellVal = font1.render(str(guess), 1, (0, 0, 0))
+        screen.blit(cellVal, ((y+0.5)*step, (x+0.5)*step))
+        pygame.display.update()
+        sleep(0.1)
         if validate(x, y, guess):
             grid[y][x] = guess
-            if solve():
+            if solve(x, y):
                 return True
 
         grid[y][x] = 0
@@ -113,7 +125,7 @@ def validate(x, y, val):
 
 resetgrid(grid)
 run = True
-normalRun = True # False means its in autosolve mode
+normalRun = True  # False means its in autosolve mode
 
 
 while run:
@@ -126,6 +138,8 @@ while run:
                 createChallengeGrid(grid)
             if event.key == pygame.K_r:
                 resetgrid(grid)
+            if event.key == pygame.K_s:
+                solve(-1, -1)
     if normalRun:
         drawGrid()
         populateGrid()
