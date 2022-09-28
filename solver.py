@@ -61,8 +61,8 @@ def populateGrid():  # this isn't a pure function too
             if cell != 0:
                 cellVal = font1.render(str(cell), 1, (0, 0, 0))
                 screen.blit(cellVal, ((i+0.5)*step, (j+0.5)*step))
-            print(cell, end=' ')
-        print('')
+            #print(cell, end=' ')
+        #print('')
 
 
 def solve():
@@ -131,18 +131,28 @@ def colorSolvedCells(solvedCells):
         pygame.draw.rect(screen, (0, 128, 0), (y*step, x *
                                                step, step, step))
 
+def colorSelected(x, y):
+    screen.fill((255, 255, 255))
+    pygame.draw.rect(screen, (128, 128, 128), (y*step, x *
+                                           step, step, step))
+
 
 resetgrid(grid)
 screen.fill((255, 255, 255))
 run = True
 normalRun = True  # False means its in autosolve mode
 
+selectedCords = (-1, -1)
 
 while run:
     for event in pygame.event.get():
         # Quit the game window
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            print(pos)
+            selectedCords = (int(pos[0]//step), int(pos[1]//step))
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_f:
                 createChallengeGrid(grid)
@@ -150,9 +160,28 @@ while run:
                 resetgrid(grid)
             if event.key == pygame.K_s:
                 solve()
-    if normalRun:
-        drawGrid()
-        populateGrid()
-        pygame.display.update()
-    else:
-        pass
+            if selectedCords != (-1, -1):
+                if event.key == pygame.K_0:
+                    grid[selectedCords[0]][selectedCords[1]] = 0
+                if event.key == pygame.K_1:
+                    grid[selectedCords[0]][selectedCords[1]] = 1
+                if event.key == pygame.K_2:
+                    grid[selectedCords[0]][selectedCords[1]] = 2
+                if event.key == pygame.K_3:
+                    grid[selectedCords[0]][selectedCords[1]] = 3
+                if event.key == pygame.K_4:
+                    grid[selectedCords[0]][selectedCords[1]] = 4
+                if event.key == pygame.K_5:
+                    grid[selectedCords[0]][selectedCords[1]] = 5
+                if event.key == pygame.K_6:
+                    grid[selectedCords[0]][selectedCords[1]] = 6
+                if event.key == pygame.K_7:
+                    grid[selectedCords[0]][selectedCords[1]] = 7
+                if event.key == pygame.K_8:
+                    grid[selectedCords[0]][selectedCords[1]] = 8
+                if event.key == pygame.K_9:
+                    grid[selectedCords[0]][selectedCords[1]] = 9
+    colorSelected(selectedCords[1], selectedCords[0])
+    drawGrid()
+    populateGrid()
+    pygame.display.update()
