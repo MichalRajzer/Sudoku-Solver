@@ -1,6 +1,6 @@
 import pygame  # used for the display
 from time import sleep
- 
+
 pygame.init()
 screen = pygame.display.set_mode((1000, 1000))  # create 1000px x 1000px window
 
@@ -9,6 +9,8 @@ pygame.display.set_caption("Sudoku solver")
 
 grid = [[0 for _ in range(9)] for x in range(9)]
 # sudoku grid is 9x9 0 can be used as placeholder since it isn't used in game
+
+solvedCells = set()
 
 
 def resetgrid(grid):
@@ -41,7 +43,6 @@ def createChallengeGrid(grid):  # create a predifined sudoku table
 
 
 def drawGrid():  # this isn't a pure function but oh well
-    screen.fill((255, 255, 255))
     for i in range(9)[1:]:
         if i % 3 == 0:
             pygame.draw.line(screen, (0, 0, 0), (i*step, 0), (i*step, 1000), 3)
@@ -64,7 +65,7 @@ def populateGrid():  # this isn't a pure function too
         print('')
 
 
-def solve(prevX, prevY):
+def solve():
     # prevX and prevY are just to make visualization nicer
     #
     # rules of sudoku:
@@ -76,9 +77,8 @@ def solve(prevX, prevY):
         return True
     x, y = empty
     for guess in range(1, 10):
+        colorSolvedCells(solvedCells)
         drawGrid()
-        pygame.draw.rect(screen, (0, 255, 0), (prevY*step, prevX *
-                                               step, step, step))
         pygame.draw.rect(screen, (0, 0, 255), (y*step, x *
                                                step, step, step))
         populateGrid()
@@ -87,11 +87,13 @@ def solve(prevX, prevY):
         pygame.display.update()
         sleep(0.1)
         if validate(x, y, guess):
+            solvedCells.add((x, y))
             grid[y][x] = guess
-            if solve(x, y):
+            if solve():
                 return True
 
         grid[y][x] = 0
+        solvedCells.discard((x, y))
     return False
 
 
@@ -123,7 +125,15 @@ def validate(x, y, val):
     return True
 
 
+def colorSolvedCells(solvedCells):
+    screen.fill((255, 255, 255))
+    for x, y in solvedCells:
+        pygame.draw.rect(screen, (0, 128, 0), (y*step, x *
+                                               step, step, step))
+
+
 resetgrid(grid)
+screen.fill((255, 255, 255))
 run = True
 normalRun = True  # False means its in autosolve mode
 
@@ -139,7 +149,7 @@ while run:
             if event.key == pygame.K_r:
                 resetgrid(grid)
             if event.key == pygame.K_s:
-                solve(-1, -1)
+                solve()
     if normalRun:
         drawGrid()
         populateGrid()
