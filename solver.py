@@ -58,6 +58,11 @@ def solve():
 
     pass
 
+def findEmpty(): #needed for the backtracking algorithm
+    for x in range(9):
+        for y in range(9):
+            if grid[y][x] == 0:
+                return (x, y)
 
 def validate(x, y, val):
     # check if the given inputs are suitable
